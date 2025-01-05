@@ -4,99 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>من سيربح المليون</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #fff;
             text-align: center;
             padding: 20px;
             margin: 0;
+             overflow-x: hidden;
         }
 
         .quiz-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            max-width: 600px;
-            margin: 0 auto;
-            color: #333;
-            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            margin: 50px auto;
+            color: #fff;
+             position: relative;
+             backdrop-filter: blur(5px);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+         .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+            border-radius: 20px;
+            z-index: -1;
         }
 
         h1 {
             color: #ffd700;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .question-container {
+         .question-container {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
+          gap: 15px;
+           margin-bottom: 20px;
         }
+
         .question {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            font-weight: bold;
+           font-size: 2em;
+          font-weight: bold;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
+
+
          .question-money {
-          font-size: 1.2em;
-          color: #ffd700;
+           font-size: 1.5em;
+            color: #ffd700;
+             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
+
 
         .answers {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
+             margin-bottom: 20px;
         }
 
         .answer-row {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 15px;
         }
 
         .answer {
-            flex: 1;
-            padding: 15px;
-            background: #f9f9f9;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+             flex: 1;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+             border-radius: 15px;
             cursor: pointer;
-            font-size: 1.2em;
-            transition: background 0.3s, transform 0.2s;
-            position: relative;
+            font-size: 1.4em;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+             position: relative;
             clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .answer.selected {
-            background: #2196F3;
+         .answer.selected {
+             background: #2196F3;
             color: #fff;
+            box-shadow: 0 6px 12px rgba(33, 150, 243, 0.4);
         }
 
         .answer.correct {
             background: #4CAF50 !important;
             color: #fff;
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
         }
 
-        .answer.wrong {
-            background: #F44336 !important;
-            color: #fff;
+         .answer.wrong {
+             background: #F44336 !important;
+             color: #fff;
+             box-shadow: 0 6px 12px rgba(244, 67, 54, 0.4);
         }
 
         .answer:hover:not(.selected):not(.correct):not(.wrong) {
-            background: #ffd700;
+            background: rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
+             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
         .result {
             margin-top: 20px;
-            font-size: 1.5em;
-            color: #333;
+            font-size: 1.8em;
+             color: #fff;
         }
 
         .hidden {
@@ -104,85 +133,126 @@
         }
 
         .score {
-            font-size: 1.8em;
+            font-size: 2em;
             color: #ffd700;
             margin-top: 20px;
+             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .percentage {
-            font-size: 1.5em;
-            color: #28a745;
+            font-size: 1.8em;
+            color: #4CAF50;
+             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
 
-         .money {
-            font-size: 1.5em;
-            color: #28a745;
-             margin-top: 10px;
+        .money {
+            font-size: 1.8em;
+            color: #ffd700;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
 
         .question-number {
-            font-size: 1.2em;
-            color: #555;
-            margin-bottom: 10px;
+            font-size: 1.4em;
+            color: #ddd;
+            margin-bottom: 15px;
+             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
 
-        .timer {
-            font-size: 1.5em;
+         .timer {
+            font-size: 1.8em;
             color: #ffd700;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+             display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
         }
+
 
         #next-btn, #retry-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #28a745;
+             margin-top: 25px;
+            padding: 15px 30px;
+            background: #4CAF50;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1.2em;
+             font-size: 1.4em;
+              transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
 
+
         #next-btn:hover, #retry-btn:hover {
-            background-color: #218838;
+            background-color: #43A047;
+            transform: scale(1.05);
+              box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
+
 
         .flag {
             position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 20px;
-            height: 20px;
-            background: #2196F3;
+            top: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+             background: #2196F3;
             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .helps {
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+             justify-content: space-around;
+             margin-top: 25px;
         }
 
-        .help-btn {
-            padding: 10px;
-            background-color: #ffc107;
-            color: #333;
-            border: none;
-            border-radius: 5px;
+       .help-btn {
+            position: relative;
+             width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .help-btn:hover:not(:disabled) {
-            background-color: #ffeb3b;
+             background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
+
         .help-btn:disabled {
-            background-color: #ccc;
-            color: #666;
+            background-color: #444;
+            color: #888;
             cursor: not-allowed;
+             box-shadow: none;
         }
+
+        .help-btn svg {
+            width: 30px;
+            height: 30px;
+             fill: #ffd700;
+              transition: fill 0.3s;
+             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+        }
+        .help-btn:hover:not(:disabled) svg {
+            fill: #fff;
+        }
+
     </style>
 </head>
 <body>
@@ -192,16 +262,21 @@
             <div class="question-number">السؤال رقم <span id="current-question-number">1</span> من 10</div>
             <div class="timer">الوقت المتبقي: <span id="time-left">10</span> ثواني</div>
                <div class="money">المبلغ الحالي: <span id="current-money">0</span>$</div>
-            <div class="question-container">
+             <div class="question-container">
               <div id="question-text" class="question"></div>
                 <span id="question-money" class="question-money"></span>
-            </div>
-
+             </div>
             <div class="answers" id="answers"></div>
              <div class="helps" id="helps">
-                <button id="help-50" class="help-btn" disabled>حذف إجابتين</button>
-                <button id="help-replace" class="help-btn" disabled>استبدال السؤال</button>
-               <button id="help-skip" class="help-btn" disabled>تخطي السؤال</button>
+                 <button id="help-50" class="help-btn" disabled>
+                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 8v-3l4-4-4-4v-3h-3l-4 4-4-4h-3v3l4 4-4 4v3h3l4-4 4 4h3zm0 4v4h-12v-4h12z"/></svg>
+                 </button>
+                <button id="help-replace" class="help-btn" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm5.66 10.84c-.77.77-1.88 1.2-3.06 1.2-1.18 0-2.28-.43-3.06-1.2l-2.24 2.24-1.41-1.41 2.24-2.24c-.77-.77-1.2-1.88-1.2-3.06 0-1.18.43-2.28 1.2-3.06l2.24-2.24 1.41 1.41-2.24 2.24c.77.77 1.88 1.2 3.06 1.2 1.18 0 2.28-.43 3.06-1.2l2.24-2.24 1.41 1.41-2.24 2.24c.77.77 1.2 1.88 1.2 3.06 0 1.18-.43 2.28-1.2 3.06l-2.24 2.24 1.41 1.41 2.24-2.24z"/></svg>
+                 </button>
+               <button id="help-skip" class="help-btn" disabled>
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.2 10l-1.54 1.54 1.4 1.41-2.83 2.83L10 14.21l-1.41 1.41 2.83 2.83L14.2 17l1.54-1.54-1.4-1.41 2.83-2.83L17 13.8l1.41-1.41-2.83-2.83zM12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>
+                 </button>
             </div>
             <button id="next-btn" class="hidden">التالي</button>
         </div>
@@ -219,7 +294,7 @@
     </div>
 
     <script>
-          const questions = [
+       const questions = [
             {
                 question: "ما هي عاصمة المغرب؟",
                 answers: [
@@ -322,7 +397,7 @@
             }
         ];
 
-        const quizContainer = document.getElementById('quiz');
+        const quizContainer = document.querySelector('.quiz-container');
          const questionContainer = document.querySelector('.question-container');
         const questionText = document.getElementById('question-text');
          const questionMoney = document.getElementById('question-money');
@@ -374,8 +449,9 @@
             }, 1000);
         }
 
-     function showQuestion(questionIndex) {
-            const question = questions[questionIndex];
+
+      function showQuestion(questionIndex) {
+           const question = questions[questionIndex];
             questionText.textContent = question.question;
              questionMoney.textContent = `(${question.money}$)`;
             answersContainer.innerHTML = '';
@@ -410,7 +486,7 @@
             selectedAnswerIndex = answerIndex;
              const answerElements = document.querySelectorAll('.answer');
             answerElements[answerIndex].classList.add('selected');
-               const flag = document.createElement('div');
+              const flag = document.createElement('div');
             flag.className = 'flag';
             answerElements[answerIndex].appendChild(flag);
         };
@@ -438,7 +514,8 @@
             nextButton.classList.remove('hidden');
         }
 
-        function nextQuestion() {
+
+       function nextQuestion() {
             currentQuestionIndex++;
             if (currentQuestionIndex < questions.length) {
                 showQuestion(currentQuestionIndex);
@@ -455,7 +532,7 @@
             percentage.textContent = `${((score / questions.length) * 100).toFixed(2)}%`;
         }
 
-        function retryQuiz() {
+       function retryQuiz() {
             quizContainer.classList.remove('hidden');
             resultContainer.classList.add('hidden');
             currentQuestionIndex = 0;
@@ -463,7 +540,7 @@
             timeLeft = 10;
               selectedAnswerIndex = null;
             money = 0;
-              currentMoney.textContent = 0;
+               currentMoney.textContent = 0;
             usedHelps = {
                 help50: false,
                 helpReplace: false,
@@ -471,19 +548,21 @@
             };
             percentage.textContent = '0%';
             finalScore.textContent = '0';
-            finalMoney.textContent = '0'
+             finalMoney.textContent = '0'
             showQuestion(currentQuestionIndex);
         }
+
 
         nextButton.addEventListener('click', nextQuestion);
         retryButton.addEventListener('click', retryQuiz);
         showQuestion(currentQuestionIndex);
 
-        help50Button.addEventListener('click', useHelp50);
+         help50Button.addEventListener('click', useHelp50);
         helpReplaceButton.addEventListener('click', useHelpReplace);
         helpSkipButton.addEventListener('click', useHelpSkip);
 
-         function useHelp50() {
+
+      function useHelp50() {
             if (usedHelps.help50) return;
             usedHelps.help50 = true;
             help50Button.disabled = true;
@@ -495,10 +574,10 @@
                     wrongIndexes.push(i);
                 }
             }
-            let randomIndex =  Math.floor(Math.random() * wrongIndexes.length)
+             let randomIndex =  Math.floor(Math.random() * wrongIndexes.length)
             const indexToRemove1 = wrongIndexes[randomIndex];
             wrongIndexes.splice(randomIndex, 1);
-            randomIndex =  Math.floor(Math.random() * wrongIndexes.length)
+             randomIndex =  Math.floor(Math.random() * wrongIndexes.length)
             const indexToRemove2 = wrongIndexes[randomIndex];
 
             const answerElements = document.querySelectorAll('.answer');
@@ -506,7 +585,7 @@
             answerElements[indexToRemove2].style.display = 'none';
         }
 
-        function useHelpReplace() {
+       function useHelpReplace() {
             if (usedHelps.helpReplace) return;
             usedHelps.helpReplace = true;
             helpReplaceButton.disabled = true;
@@ -516,15 +595,15 @@
                     { text: "الاجابة الاولى ", correct: false },
                     { text: "الاجابة الثانية", correct: true },
                     { text: "الاجابة الثالثة", correct: false },
-                    { text: "الاجابة الرابعة", correct: false }
+                     { text: "الاجابة الرابعة", correct: false }
                 ],
                  money: 100
             }
             questions.push(newQuestion)
-            showQuestion(currentQuestionIndex)
+           showQuestion(currentQuestionIndex)
         }
 
-         function useHelpSkip() {
+       function useHelpSkip() {
             if (usedHelps.helpSkip) return;
             usedHelps.helpSkip = true;
             helpSkipButton.disabled = true;
