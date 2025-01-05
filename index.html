@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من سيربح المليون</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin: 0 auto;
+            color: #333;
+            position: relative;
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        .question {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+         .question-money {
+          font-size: 1.2em;
+          color: #ffd700;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .answer {
+            flex: 1;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background 0.3s, transform 0.2s;
+            position: relative;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+        }
+
+        .answer.selected {
+            background: #2196F3;
+            color: #fff;
+        }
+
+        .answer.correct {
+            background: #4CAF50 !important;
+            color: #fff;
+        }
+
+        .answer.wrong {
+            background: #F44336 !important;
+            color: #fff;
+        }
+
+        .answer:hover:not(.selected):not(.correct):not(.wrong) {
+            background: #ffd700;
+            transform: scale(1.05);
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .score {
+            font-size: 1.8em;
+            color: #ffd700;
+            margin-top: 20px;
+        }
+
+        .percentage {
+            font-size: 1.5em;
+            color: #28a745;
+        }
+
+         .money {
+            font-size: 1.5em;
+            color: #28a745;
+             margin-top: 10px;
+        }
+
+
+        .question-number {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        #next-btn, #retry-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        #next-btn:hover, #retry-btn:hover {
+            background-color: #218838;
+        }
+
+        .flag {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background: #2196F3;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        .helps {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .help-btn {
+            padding: 10px;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .help-btn:hover:not(:disabled) {
+            background-color: #ffeb3b;
+        }
+
+        .help-btn:disabled {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>من سيربح المليون</h1>
+        <div id="quiz">
+            <div class="question-number">السؤال رقم <span id="current-question-number">1</span> من 10</div>
+            <div class="timer">الوقت المتبقي: <span id="time-left">10</span> ثواني</div>
+               <div class="money">المبلغ الحالي: <span id="current-money">0</span>$</div>
+            <div class="question-container">
+              <div id="question-text" class="question"></div>
+                <span id="question-money" class="question-money"></span>
+            </div>
+
+            <div class="answers" id="answers"></div>
+             <div class="helps" id="helps">
+                <button id="help-50" class="help-btn" disabled>حذف إجابتين</button>
+                <button id="help-replace" class="help-btn" disabled>استبدال السؤال</button>
+               <button id="help-skip" class="help-btn" disabled>تخطي السؤال</button>
+            </div>
+            <button id="next-btn" class="hidden">التالي</button>
+        </div>
+        <div id="result" class="hidden">
+            <h2>النتيجة</h2>
+            <div class="score">أجبت على <span id="final-score">0</span> من 10 أسئلة بشكل صحيح!</div>
+            <div class="percentage">نسبتك هي: <span id="percentage">0%</span></div>
+             <div class="money">المبلغ النهائي: <span id="final-money">0</span>$</div>
+            <button id="retry-btn">إعادة المحاولة</button>
+        </div>
+       <audio id="correct-sound" src="correct.mp3"></audio>
+        <audio id="wrong-sound" src="wrong.mp3"></audio>
+        <audio id="time-up-sound" src="timeup.mp3"></audio>
+
+    </div>
+
+    <script>
+          const questions = [
+            {
+                question: "ما هي عاصمة المغرب؟",
+                answers: [
+                    { text: "الدار البيضاء", correct: false },
+                    { text: "الرباط", correct: true },
+                    { text: "مراكش", correct: false },
+                    { text: "فاس", correct: false }
+                ],
+                money: 100
+            },
+            {
+                question: "ما هي العملة الرسمية للمغرب؟",
+                answers: [
+                    { text: "الدولار", correct: false },
+                    { text: "اليورو", correct: false },
+                    { text: "الدرهم", correct: true },
+                    { text: "الجنيه", correct: false }
+                ],
+                money: 200
+            },
+            {
+                question: "ما هو أعلى جبل في المغرب؟",
+                answers: [
+                    { text: "جبل توبقال", correct: true },
+                    { text: "جبل تاركا", correct: false },
+                    { text: "جبل سروا", correct: false },
+                    { text: "جبل العياشي", correct: false }
+                ],
+                money: 300
+            },
+            {
+                question: "ما هو البحر الذي يحد المغرب من الشمال؟",
+                answers: [
+                    { text: "البحر الأحمر", correct: false },
+                    { text: "البحر الأبيض المتوسط", correct: true },
+                    { text: "المحيط الأطلسي", correct: false },
+                    { text: "البحر الأسود", correct: false }
+                ],
+                money: 400
+            },
+            {
+                question: "ما هو أشهر طبق مغربي؟",
+                answers: [
+                    { text: "الكسكس", correct: true },
+                    { text: "الطاجين", correct: false },
+                    { text: "الباستيلا", correct: false },
+                    { text: "الحريرة", correct: false }
+                ],
+                money: 500
+            },
+            {
+                question: "ما هو اسم الصحراء الكبرى في المغرب؟",
+                answers: [
+                    { text: "صحراء الربع الخالي", correct: false },
+                    { text: "صحراء النفود", correct: false },
+                    { text: "صحراء المغرب", correct: false },
+                    { text: "صحراء الصحراء المغربية", correct: true }
+                ],
+                money: 600
+            },
+            {
+                question: "ما هو اسم أشهر سوق في مراكش؟",
+                answers: [
+                    { text: "سوق الحناء", correct: false },
+                    { text: "سوق السمارة", correct: false },
+                    { text: "سوق جامع الفنا", correct: true },
+                    { text: "سوق العطارين", correct: false }
+                ],
+                money: 700
+            },
+            {
+                question: "ما هو اسم أشهر نهر في المغرب؟",
+                answers: [
+                    { text: "نهر أم الربيع", correct: true },
+                    { text: "نهر سبو", correct: false },
+                    { text: "نهر ملوية", correct: false },
+                    { text: "نهر درعة", correct: false }
+                ],
+                money: 800
+            },
+            {
+                question: "ما هو اسم أشهر مسجد في المغرب؟",
+                answers: [
+                    { text: "مسجد الحسن الثاني", correct: true },
+                    { text: "مسجد القرويين", correct: false },
+                    { text: "مسجد الكتبية", correct: false },
+                    { text: "مسجد محمد الخامس", correct: false }
+                ],
+                money: 900
+            },
+            {
+                question: "ما هو اسم أشهر مهرجان في المغرب؟",
+                answers: [
+                    { text: "مهرجان الجاز", correct: false },
+                    { text: "مهرجان موازين", correct: true },
+                    { text: "مهرجان الورد", correct: false },
+                    { text: "مهرجان التمور", correct: false }
+                ],
+                money: 1000
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz');
+         const questionContainer = document.querySelector('.question-container');
+        const questionText = document.getElementById('question-text');
+         const questionMoney = document.getElementById('question-money');
+        const answersContainer = document.getElementById('answers');
+        const resultContainer = document.getElementById('result');
+        const finalScore = document.getElementById('final-score');
+        const percentage = document.getElementById('percentage');
+        const currentQuestionNumber = document.getElementById('current-question-number');
+        const timeLeftElement = document.getElementById('time-left');
+        const nextButton = document.getElementById('next-btn');
+        const retryButton = document.getElementById('retry-btn');
+        const helpsContainer = document.getElementById('helps');
+        const help50Button = document.getElementById('help-50');
+        const helpReplaceButton = document.getElementById('help-replace');
+        const helpSkipButton = document.getElementById('help-skip');
+        const currentMoney = document.getElementById('current-money');
+        const finalMoney = document.getElementById('final-money');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 10;
+        let selectedAnswerIndex = null;
+        let money = 0;
+        let usedHelps = {
+            help50: false,
+            helpReplace: false,
+            helpSkip: false
+        };
+
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            if (sound) {
+                sound.play();
+            }
+        }
+
+       function startTimer() {
+            timeLeft = 10;
+            timeLeftElement.textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                timeLeftElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    revealAnswer();
+                     playSound('time-up-sound');
+                }
+            }, 1000);
+        }
+
+     function showQuestion(questionIndex) {
+            const question = questions[questionIndex];
+            questionText.textContent = question.question;
+             questionMoney.textContent = `(${question.money}$)`;
+            answersContainer.innerHTML = '';
+            for (let i = 0; i < question.answers.length; i += 2) {
+                const answerRow = document.createElement('div');
+                answerRow.className = 'answer-row';
+                answerRow.innerHTML = `
+                    <div class="answer" data-index="${i}" onclick="selectAnswer(${i})">
+                        ${question.answers[i].text}
+                    </div>
+                    ${i + 1 < question.answers.length ? `
+                    <div class="answer" data-index="${i + 1}" onclick="selectAnswer(${i + 1})">
+                        ${question.answers[i + 1].text}
+                    </div>
+                    ` : ''}
+                `;
+                answersContainer.appendChild(answerRow);
+            }
+
+            help50Button.disabled = usedHelps.help50;
+            helpReplaceButton.disabled = usedHelps.helpReplace;
+            helpSkipButton.disabled = usedHelps.helpSkip;
+            currentQuestionNumber.textContent = questionIndex + 1;
+            nextButton.classList.add('hidden');
+             selectedAnswerIndex = null;
+              startTimer();
+        }
+
+
+        window.selectAnswer = function(answerIndex) {
+            if (selectedAnswerIndex !== null) return;
+            selectedAnswerIndex = answerIndex;
+             const answerElements = document.querySelectorAll('.answer');
+            answerElements[answerIndex].classList.add('selected');
+               const flag = document.createElement('div');
+            flag.className = 'flag';
+            answerElements[answerIndex].appendChild(flag);
+        };
+
+
+        function revealAnswer() {
+            clearInterval(timer);
+             const question = questions[currentQuestionIndex];
+            const answerElements = document.querySelectorAll('.answer');
+            answerElements.forEach((el, index) => {
+                if (question.answers[index].correct) {
+                    el.classList.add('correct');
+                } else {
+                    el.classList.add('wrong');
+                }
+            });
+            if (selectedAnswerIndex !== null && question.answers[selectedAnswerIndex].correct) {
+                 score++;
+                money += question.money
+                currentMoney.textContent = money;
+                 playSound('correct-sound');
+            } else {
+               playSound('wrong-sound');
+            }
+            nextButton.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion(currentQuestionIndex);
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            finalScore.textContent = score;
+            finalMoney.textContent = money;
+            percentage.textContent = `${((score / questions.length) * 100).toFixed(2)}%`;
+        }
+
+        function retryQuiz() {
+            quizContainer.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 10;
+              selectedAnswerIndex = null;
+            money = 0;
+              currentMoney.textContent = 0;
+            usedHelps = {
+                help50: false,
+                helpReplace: false,
+                helpSkip: false
+            };
+            percentage.textContent = '0%';
+            finalScore.textContent = '0';
+            finalMoney.textContent = '0'
+            showQuestion(currentQuestionIndex);
+        }
+
+        nextButton.addEventListener('click', nextQuestion);
+        retryButton.addEventListener('click', retryQuiz);
+        showQuestion(currentQuestionIndex);
+
+        help50Button.addEventListener('click', useHelp50);
+        helpReplaceButton.addEventListener('click', useHelpReplace);
+        helpSkipButton.addEventListener('click', useHelpSkip);
+
+         function useHelp50() {
+            if (usedHelps.help50) return;
+            usedHelps.help50 = true;
+            help50Button.disabled = true;
+            const question = questions[currentQuestionIndex];
+            const correctIndex = question.answers.findIndex(answer => answer.correct);
+            let wrongIndexes = [];
+            for (let i = 0; i < question.answers.length; i++) {
+                if (!question.answers[i].correct) {
+                    wrongIndexes.push(i);
+                }
+            }
+            let randomIndex =  Math.floor(Math.random() * wrongIndexes.length)
+            const indexToRemove1 = wrongIndexes[randomIndex];
+            wrongIndexes.splice(randomIndex, 1);
+            randomIndex =  Math.floor(Math.random() * wrongIndexes.length)
+            const indexToRemove2 = wrongIndexes[randomIndex];
+
+            const answerElements = document.querySelectorAll('.answer');
+            answerElements[indexToRemove1].style.display = 'none';
+            answerElements[indexToRemove2].style.display = 'none';
+        }
+
+        function useHelpReplace() {
+            if (usedHelps.helpReplace) return;
+            usedHelps.helpReplace = true;
+            helpReplaceButton.disabled = true;
+            const newQuestion = {
+                question: "سؤال جديد تم استبداله",
+                answers: [
+                    { text: "الاجابة الاولى ", correct: false },
+                    { text: "الاجابة الثانية", correct: true },
+                    { text: "الاجابة الثالثة", correct: false },
+                    { text: "الاجابة الرابعة", correct: false }
+                ],
+                 money: 100
+            }
+            questions.push(newQuestion)
+            showQuestion(currentQuestionIndex)
+        }
+
+         function useHelpSkip() {
+            if (usedHelps.helpSkip) return;
+            usedHelps.helpSkip = true;
+            helpSkipButton.disabled = true;
+            money = Math.max(0, money - (money * 0.1));
+            currentMoney.textContent = money.toFixed(0) ;
+            nextQuestion();
+        }
+    </script>
+</body>
+</html>
